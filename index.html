@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EchoCode - Modern Code Sharing</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="echocode.ico" type="image/ico">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/tokyo-night-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/yaml.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/kotlin.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/ini.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <span class="logo-icon"><i class="fas fa-code"></i></span>
+                <h1>Echo<span class="accent">Code</span></h1>
+            </div>
+            <div class="header-controls">
+                <div class="language-toggle" id="language-toggle">
+                    <span class="active" data-lang="en">EN</span>
+                    <span data-lang="es">ES</span>
+                </div>
+                <div class="theme-toggle" id="theme-toggle">
+                    <i class="fas fa-moon"></i>
+                </div>
+            </div>
+        </header>
+
+        <main>
+            <div id="view-mode-banner" class="view-mode-banner hidden">
+                <div class="shared-info">
+                    <i class="fas fa-user-share"></i>
+                    <div class="shared-text">
+                        <span class="shared-by" data-en="Shared code" data-es="Código compartido"></span>
+                        <span class="shared-time" id="shared-time"></span>
+                    </div>
+                </div>
+                <button id="fork-btn" class="btn accent-btn">
+                    <i class="fas fa-code-branch"></i> <span data-en="Fork" data-es="Bifurcar"></span>
+                </button>
+            </div>
+
+            <div class="editor-container">
+                <div class="editor-header">
+                    <div class="language-selector">
+                        <i class="fas fa-code"></i>
+                        <button id="language-select-btn" class="language-select-btn">
+                            <span id="selected-language">JavaScript</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                    </div>
+                    <div class="expiry">
+                        <i class="fas fa-clock"></i>
+                        <select id="expiry-select">
+                            <option value="15">15 min</option>
+                            <option value="20">20 min</option>
+                            <option value="30">30 min</option>
+                            <option value="60">1 hour</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="editor-wrapper">
+                    <textarea id="code-editor" placeholder="Paste or type your code here..."></textarea>
+                    <pre><code id="highlighted-code" class="hljs"></code></pre>
+                </div>
+                <div class="editor-footer">
+                    <div class="line-count">
+                        <i class="fas fa-list-ol"></i>
+                        <span id="line-count">0</span> <span id="lines-label" data-en="lines" data-es="líneas"></span>
+                    </div>
+                    <div class="char-count">
+                        <i class="fas fa-text-width"></i>
+                        <span id="char-count">0</span> <span id="chars-label" data-en="characters" data-es="caracteres"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="actions">
+                <button id="save-btn" class="btn primary">
+                    <i class="fas fa-save"></i> <span data-en="Save" data-es="Guardar"></span>
+                </button>
+                <button id="copy-btn" class="btn">
+                    <i class="fas fa-copy"></i> <span data-en="Copy Code" data-es="Copiar Código"></span>
+                </button>
+                <button id="new-btn" class="btn">
+                    <i class="fas fa-plus"></i> <span data-en="New" data-es="Nuevo"></span>
+                </button>
+            </div>
+
+            <div id="link-container" class="link-container hidden">
+                <div class="link-header">
+                    <h3><span data-en="Share Link" data-es="Enlace para Compartir"></span></h3>
+                    <span class="expiry-info"><span data-en="Expires in" data-es="Expira en"></span> <span id="expiry-time">15</span> <span data-en="minutes" data-es="minutos"></span></span>
+                </div>
+                <div class="link-content">
+                    <input type="text" id="share-link" readonly>
+                    <button id="copy-link-btn" class="btn">
+                        <i class="fas fa-copy"></i>
+                    </button>
+                </div>
+                <p class="link-help"><span data-en="Copy this link to share your code" data-es="Copia este enlace para compartir tu código"></span></p>
+            </div>
+        </main>
+
+        <footer>
+            <p>© 2025 EchoCode - <span data-en="Modern Code Sharing" data-es="Compartición de Código Moderna"></span></p>
+        </footer>
+    </div>
+
+    <div id="language-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 data-en="Select Language" data-es="Seleccionar Lenguaje"></h3>
+                <button class="modal-close" id="language-modal-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="search-container">
+                    <input type="text" id="language-search" placeholder="Search language...">
+                    <i class="fas fa-search"></i>
+                </div>
+                <div class="language-grid" id="language-grid">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="alert-modal" class="modal hidden">
+        <div class="modal-content alert-content">
+            <div class="modal-header">
+                <h3 id="alert-title">Notice</h3>
+                <button class="modal-close" id="alert-modal-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p id="alert-message"></p>
+                <div class="alert-buttons">
+                    <button id="alert-ok" class="btn primary">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="confirm-modal" class="modal hidden">
+        <div class="modal-content confirm-content">
+            <div class="modal-header">
+                <h3 id="confirm-title">Confirm</h3>
+                <button class="modal-close" id="confirm-modal-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p id="confirm-message"></p>
+                <div class="confirm-buttons">
+                    <button id="confirm-cancel" class="btn">Cancel</button>
+                    <button id="confirm-ok" class="btn primary">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="notification" class="notification">
+        <span id="notification-message"></span>
+    </div>
+
+    <div id="overlay" class="overlay hidden"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
